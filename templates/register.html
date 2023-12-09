@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    BlueprintAI
+{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5" style="padding-top:100px">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center">Register</h3>
+                    <form method="post" action="/register" id="registerForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="password-confirmation" name="password-confirmation" required>
+                        </div>
+                        <div class="d-grid mb-3 text-center">
+                            <button type="submit" class="btn btn-danger btn-lg">Create account</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="mt-3 text-center">
+                <span >Already have an account?</span>
+                <div class="d-grid" style="padding:10px">
+                    <a href="/login" class="btn btn-outline-danger btn-sm">Log In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    body {
+        font-family: "Courier New", monospace;
+    }
+</style>
+<script>
+    document.querySelector('form').addEventListener('submit', function(event)
+    {
+        event.preventDefault();
+        var formData = new FormData(this);
+
+        fetch('/register', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.status === 400) {
+                return response.json().then(data => {
+                    // Display error modal with message
+                    document.getElementById('errorMessage').textContent = data.message;
+                    new bootstrap.Modal(document.getElementById('errorModal')).show();
+
+                    // Reset the form fields
+                    this.reset();
+                });
+            } else {
+                // Redirect on successful login
+                window.location.href = '/';
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,198 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    BlueprintAI
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5 text-center">
+        <div class="buttons">
+            <form action="/logout" method="post" style="text-align: right;" id="logout-form">
+                <button type="submit" class="btn btn-outline-success" name="logout" id="logout">Logout</button>
+            </form>
+        </div>
+        <h1 class="mb-4">Building Visualizer</h1>
+        <p><h5>Welcome to our Building Visualizer! This form is designed to help you render an image of a building based on your preferences. Whether you're a real estate developer looking to visualize your next project or simply curious about the possibilities, we're here to assist you.</h5></p>
+        <p><h5>By answering the following questions, we'll gather information about your building's type, style, location, and more. Once completed, we'll use artificial intelligence to create a custom image that reflects your vision.</h5></p>
+        <form method="post" action="/">
+            <div class="mb-3 form-question" >
+                <label for="buildingType" class="form-label">Type</label>
+                <div>
+                    <select class="form-select form-select-lg custom-select" id="buildingType" name="buildingType">
+                        <option disabled selected value="">Choose Building Type</option>
+                        <option>Residential Apartments</option>
+                        <option>Commercial Office Space</option>
+                        <option>Mixed-Use</option>
+                        <option>Retail Complex</option>
+                        <option>Industrial Facility</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 form-question" >
+                <label for="heightStories" class="form-label">Number of Stories</label>
+                <div>
+                    <select class="form-select form-select-lg custom-select" id="heightStories" name="heightStories">
+                        <option disabled selected value="">Select Number of Stories</option>
+                        {% for i in range(3, 101) %}
+                            <option>{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 form-question">
+                <label for="colorFinishes" class="form-label">Color Scheme and Finishes</label>
+                <div>
+                    <select class="form-select form-select-lg custom-select" id="colorFinishes" name="colorFinishes">
+                        <option disabled selected value="">Choose Color Scheme</option>
+                        <option>Contemporary Neutral (Whites, Grays)</option>
+                        <option>Natural Earth Tones</option>
+                        <option>Bold Hues</option>
+                        <option>High-End Dark Tones</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 form-question">
+                <label for="primaryMaterials" class="form-label">Primary Materials</label>
+                <div>
+                    <select class="form-select form-select-lg custom-select" id="primaryMaterials" name="primaryMaterials">
+                        <option disabled selected value="">Select Primary Material</option>
+                        <option>Concrete Precast</option>
+                        <option>Stone Cladding</option>
+                        <option>Brick</option>
+                        <option>Steel</option>
+                        <option>Wood</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 form-question">
+                <label for="locationContext" class="form-label">Location Context</label>
+                <div>
+                    <select class="form-select form-select-lg custom-select" id="locationContext" name="locationContext">
+                        <option disabled selected value="">Choose Location Context</option>
+                        <option>Urban</option>
+                        <option>Suburban</option>
+                        <option>Rural</option>
+                        <option>Coastal</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 form-question">
+                <label for="architecturalStyle" class="form-label">Architectural Style</label>
+                <div>
+                    <select class="form-select form-select-lg custom-select" id="architecturalStyle" name="architecturalStyle">
+                        <option disabled selected value="">Select Architectural Style</option>
+                        <option>Modern</option>
+                        <option>Industrial</option>
+                        <option>Art Deco</option>
+                        <option>Standard</option>
+                        <option>Minimalist</option>
+                        <option>Mediterranean</option>
+                        <option>Victorian</option>
+                        <option>Gothic Revival</option>
+                        <option>Colonial</option>
+                        <option>Bauhaus</option>
+                        <option>Brutalist</option>
+                        <option>Postmodern</option>
+                        <option>Tudor</option>
+                        <option>Mid Century Modern</optioN>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 form-question">
+                <label for="luxuryLevel" class="form-label">Quality Tier</label>
+                <div>
+                    <select class="form-select form-select-lg custom-select" id="qualityTier" name="qualityTier">
+                        <option disabled selected value="">Choose Quality Tier</option>
+                        <option>Standard</option>
+                        <option>Premium</option>
+                        <option>Luxury</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 form-question">
+                <label class="form-label">Additional Elements</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Pedestrian Plaza, Water Fountain, Public Art..." style="border-color: green;" id="additionalElements" name="additionalElements">
+                </div>
+            </div>
+            <div class="form-question">
+                <h4>Ready to Render?</h4>
+                <button type="submit" class="btn btn-warning" style="font-size: 20px;">Yes</button>
+            </div>
+        </form>
+    </div>
+    <style>
+
+        body {
+            font-family: "Courier New", monospace;
+        }
+        .form-question {
+            margin: 75px;
+        }
+
+        .form-select {
+            border: none;
+            border-radius: 0;
+            font-size: 18px;
+            background-color: transparent;
+            color: green;
+            box-shadow: none;
+            width: 100%;
+            text-align-last: center;
+        }
+
+        @media (min-width: 992px) {
+
+            .form-select {
+                width: 50%;
+            }
+        }
+
+        .form-select:focus {
+            border: 1px solid green;
+        }
+
+        .form-label {
+            font-size: 25px;
+        }
+
+    </style>
+<script>
+    document.querySelector('form:not(#logout-form)').addEventListener('submit', function(event)
+    {
+        event.preventDefault();
+        var formData = new FormData(this);
+
+        fetch('/', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.status === 400) {
+                return response.json().then(data => {
+
+                    document.getElementById('errorMessage').textContent = data.message;
+                    new bootstrap.Modal(document.getElementById('errorModal')).show();
+                });
+            } else {
+                window.location.href = "/loading"; 
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+{% endblock %} 
+
+<!--
+        <label for="timeOfDay" class="form-label">Time of Day or Lighting</label>
+    <div>
+        <select class="form-select form-select-lg custom-select" id="timeOfDay" name="timeOfDay">
+            <option disabled selected value="">Select Lighting Time</option>
+            <option>Daylight</option>
+            <option>Nighttime</option>
+            <option>Sunset</option>
+            <option>Sunrise</option>
+        </select>
+    </div>
+</div>
+-->

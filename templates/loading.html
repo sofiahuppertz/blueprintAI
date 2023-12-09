@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Loading ...
+{% endblock %}
+
+{% block body %}
+
+<div class="container-sm">
+    <h1>Loading...</h1>
+    <div id="image-container">
+        <img id="loading-image" src="{{ url_for('static', filename='loading.gif') }}" alt="Loading...">
+    </div>
+</div> 
+<style>
+    body {
+        text-align: center;
+        font-family: "Courier New", monospace;
+        background-color: rgb(2, 2, 2);
+        color: white;
+    }
+
+    #image-container {
+        margin: 20px auto;
+        padding: 0;
+        width: 65%;
+    }
+
+    #loading-image {
+        width: 60%;
+    }
+</style>
+<script>
+    const images = [
+        "{{ url_for('static', filename='loading1.png') }}",
+        "{{ url_for('static', filename='loading2.png') }}",
+        "{{ url_for('static', filename='loading3.png') }}",
+        "{{ url_for('static', filename='loading4.png') }}",
+        "{{ url_for('static', filename='loading5.png') }}",
+        "{{ url_for('static', filename='loading6.png') }}",
+        "{{ url_for('static', filename='loading7.png') }}",
+        "{{ url_for('static', filename='loading8.png') }}",
+        "{{ url_for('static', filename='loading9.png') }}",
+        // Add more image URLs here
+    ];
+    const imageContainer = document.getElementById('image-container');
+    const loadingImage = document.getElementById('loading-image');
+    let currentIndex = 0;
+    function rotateImages() {
+        loadingImage.src = images[currentIndex];
+        currentIndex = (currentIndex + 1) % images.length;
+    }
+    let rotateImagesInterval = setInterval(rotateImages, 1500); // Rotate images every 3 seconds
+    let checkImageInterval = setInterval(function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/check_image', true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.getResponseHeader('X-Redirect')) {
+                console.log('Received X-Redirect header, clearing intervals');
+                clearInterval(checkImageInterval)
+                clearInterval(rotateImagesInterval)
+                window.location.href = xhr.getResponseHeader('X-Redirect');
+            }
+        }
+        xhr.send();
+    }, 2000);
+</script>
+{% endblock %}
