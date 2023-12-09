@@ -1,7 +1,7 @@
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify, url_for, make_response
 from flask_session import Session
-from helpers import generate_image
+from helpers import generate_image, create_tables
 import os
 from openai import OpenAI
 from queue import Queue
@@ -18,11 +18,9 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+create_tables()
 # Database for users
 db = SQL("sqlite:///blueprintai.db")
-
-# Create a database instance pointing to the 'blueprint.db' file
-db = SQL("sqlite:///blueprint.db")
 
 # Create 'users' table
 db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, hash TEXT)")
@@ -211,4 +209,5 @@ def register():
         return redirect("/")
     else:
         return render_template("register.html")
+    
 

@@ -1,6 +1,7 @@
 from requests import get
 from flask import redirect, url_for
 from cs50 import SQL
+import sqlite3
 import uuid
 
 # Function to generate an image based on a prompt description
@@ -49,3 +50,19 @@ def generate_image(prompt_description, client, user_id,  db, image_queue):
         # If an error occurred, print the error and return None
         print(f"Error in generate_image: {str(e)}")
         return None
+
+
+# Function to create tables
+def create_tables():
+    conn = sqlite3.connect('blueprintai.db')
+    cursor = conn.cursor()
+
+    # Create 'users' table
+    cursor.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, hash TEXT)")
+
+    # Create 'images' table
+    cursor.execute("CREATE TABLE IF NOT EXISTS images (id INTEGER PRIMARY KEY AUTOINCREMENT, prompt TEXT NOT NULL, image_data BLOB NOT NULL, user_id INTEGER NOT NULL)")
+
+    conn.commit()
+    conn.close()
+    return
