@@ -21,6 +21,15 @@ Session(app)
 # Database for users
 db = SQL("sqlite:///blueprintai.db")
 
+# Create a database instance pointing to the 'blueprint.db' file
+db = SQL("sqlite:///blueprint.db")
+
+# Create 'users' table
+db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, hash TEXT)")
+
+# Create 'images' table
+db.execute("CREATE TABLE IF NOT EXISTS images (id INTEGER PRIMARY KEY AUTOINCREMENT, prompt TEXT NOT NULL, image_data BLOB NOT NULL, user_id INTEGER NOT NULL)")
+
 # OpenAI API Client
 openai_api_key = os.environ.get("OPENAI_API_KEY")
 client = OpenAI(api_key=openai_api_key)
