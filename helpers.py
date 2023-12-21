@@ -52,7 +52,7 @@ def generate_image(prompt_description, client, user_id,  db, image_queue):
         return None
 
 
-# Function to create tables
+# Function to create tables3
 def create_tables():
     conn = sqlite3.connect('blueprintai.db')
     cursor = conn.cursor()

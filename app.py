@@ -29,7 +29,7 @@ db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT,
 db.execute("CREATE TABLE IF NOT EXISTS images (id INTEGER PRIMARY KEY AUTOINCREMENT, prompt TEXT NOT NULL, image_data BLOB NOT NULL, user_id INTEGER NOT NULL)")
 
 # OpenAI API Client
-openai_api_key = os.environ.get("OPENAI_API_KEY")
+openai_api_key = "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"
 client = OpenAI(api_key=openai_api_key)
 
 # I took this from the CS50 Finance project
@@ -81,8 +81,8 @@ def index():
 
         # Define the template for the building description
         building_description_template = (
-            "Generate an image of a {num_stories}-story {building_type} "
-            "building with a {color_finishes} facade. The building should be located in a {location_context} "
+            "Generate an image of a {building_type} "
+            "building with a {color_finishes} facade and not more nor less than {num_stories} st. The building should be located in a {location_context} "
             "setting. Highlight the building's {quality_tier} design in the {architectural_style} architectural style with"
             " {color_finishes} and built primarily with {primary_materials}. DO NOT WRITE TEXT ON THE IMAGE."
             "ADD these additional elements to the building: {additional_elements}."
@@ -112,6 +112,7 @@ def index():
 def check_image():
     if not image_queue.empty():
         session['image_path'] = image_queue.get() 
+        print(session['image_path'])
         response = make_response("", 302)
         response.headers['X-Redirect'] = '/building'
         return response
