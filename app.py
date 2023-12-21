@@ -29,7 +29,7 @@ db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT,
 db.execute("CREATE TABLE IF NOT EXISTS images (id INTEGER PRIMARY KEY AUTOINCREMENT, prompt TEXT NOT NULL, image_data BLOB NOT NULL, user_id INTEGER NOT NULL)")
 
 # OpenAI API Client
-openai_api_key = "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"
+openai_api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=openai_api_key)
 
 # I took this from the CS50 Finance project
