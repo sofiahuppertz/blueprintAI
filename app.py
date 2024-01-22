@@ -1,7 +1,8 @@
 from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session, jsonify, url_for, make_response
+from flask import Flask, flash, redirect, render_template, request, session, jsonify, send_from_directory, make_response, url_for
 from flask_session import Session
-from helpers import generate_image, create_tables
+from helpers import *
+from prompt_helpers import *
 import os
 from openai import OpenAI
 from queue import Queue
@@ -13,6 +14,7 @@ app = Flask(__name__)
 
 image_queue = Queue()
 
+building_description = ""
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -21,12 +23,6 @@ Session(app)
 create_tables()
 # Database for users
 db = SQL("sqlite:///blueprintai.db")
-
-# Create 'users' table
-db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, hash TEXT)")
-
-# Create 'images' table
-db.execute("CREATE TABLE IF NOT EXISTS images (id INTEGER PRIMARY KEY AUTOINCREMENT, prompt TEXT NOT NULL, image_data BLOB NOT NULL, user_id INTEGER NOT NULL)")
 
 # OpenAI API Client
 openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -42,107 +38,65 @@ def after_request(response):
     return response
 
 
-# Define the route for the index page
 @app.route("/", methods=["GET", "POST"])
 def index():
-    # If the user is not logged in, redirect them to the login page
     if session.get("user_id") is None:
         return redirect("/login")
+    return render_template("index.html"), 200
 
-    # If the request method is GET, render the index page
-    if request.method == "GET":
-        return render_template("index.html")
-    else:
-        # If the request method is POST, get the form values
-        building_type = request.form.get("buildingType")
-        num_stories = request.form.get("heightStories")
-        color_finishes = request.form.get("colorFinishes")
-        primary_materials = request.form.get("primaryMaterials")
-        location_context = request.form.get("locationContext")
-        architectural_style = request.form.get("architecturalStyle")
-        quality_tier = request.form.get("qualityTier")
-        additional_elements = request.form.get("additionalElements")
 
-        # Validate the form values
-        if not building_type:
-            return jsonify({"message": "You forgot to enter a Building Type"}), 400
-        if not num_stories:
-            return jsonify({"message": "You forgot to enter a Number of Stories"}), 400
-        if not color_finishes:
-            return jsonify({"message": "You forgot to enter a Color Scheme"}), 400
-        if not primary_materials:
-            return jsonify({"message": "You forgot to enter Primary Materials"}), 400
-        if not location_context:
-            return jsonify({"message": "You forgot to enter a Location Context"}), 400
-        if not architectural_style:
-            return jsonify({"message": "You forgot to enter an Architectural Style"}), 400
-        if not quality_tier:
-            return jsonify({"message": "You forgot to enter a Quality Tier"}), 400
+@app.route('/submit_form', methods=['POST'])
+def submit_form():
+    # Get the form values into session object
+    building_type = request.form.get("buildingType")
+    num_stories = request.form.get("heightStories")
+    color_finishes = request.form.get("colorFinishes")
+    primary_materials = request.form.get("primaryMaterials")
+    location_context = request.form.get("locationContext")
+    landscape_type = request.form.get("landscapeType")
+    architectural_style = request.form.get("architecturalStyle")
+    quality_tier = request.form.get("qualityTier")
+    additional_elements = request.form.get("additionalElements")
+    if (num_stories):
+        qualitative_height = building_height_description(num_stories)
+    # Validate the form values
+    if not building_type:
+        return jsonify({"message": "You forgot to enter a Building Type"}), 400
+    if not num_stories:
+        return jsonify({"message": "You forgot to enter a Number of Stories"}), 400
+    if not color_finishes:
+        return jsonify({"message": "You forgot to enter a Color Scheme"}), 400
+    if not primary_materials:
+        return jsonify({"message": "You forgot to enter Primary Materials"}), 400
+    if not location_context:
+        return jsonify({"message": "You forgot to enter a Location Context"}), 400
+    if not landscape_type:
+        return jsonify({"message": "You forgot to enter a Landscape Type"}), 400
+    if not  architectural_style:
+        return jsonify({"message": "You forgot to enter an Architectural Style"}), 400
+    if not quality_tier:
+        return jsonify({"message": "You forgot to enter a Quality Tier"}), 400
+    if not qualitative_height:
+        return jsonify({"message": "Error with building height description"}), 400
+    prompt = make_image_prompt(building_type, num_stories, color_finishes, primary_materials, location_context, landscape_type, architectural_style, quality_tier, additional_elements, qualitative_height)
+    thread = Thread(target=generate_image, args=(prompt, client, session, image_queue))
+    thread.start()
+    return jsonify({'new_text': 'Loading...'})
 
-        # Define the template for the building description
-        building_description_template = (
-            "Generate an image of a {building_type} "
-            "building with a {color_finishes} facade and not more nor less than {num_stories} st. The building should be located in a {location_context} "
-            "setting. Highlight the building's {quality_tier} design in the {architectural_style} architectural style with"
-            " {color_finishes} and built primarily with {primary_materials}. DO NOT WRITE TEXT ON THE IMAGE."
-            "ADD these additional elements to the building: {additional_elements}."
-        )
 
-        # Fill in the placeholders in the template with the form values
-        building_description = building_description_template.format(
-            num_stories=num_stories,
-            building_type=building_type,
-            color_finishes=color_finishes,
-            location_context=location_context,
-            architectural_style=architectural_style,
-            quality_tier=quality_tier,
-            primary_materials=primary_materials,
-            additional_elements=additional_elements,
-        )
-
-        # Start a new thread to generate the image
-        thread = Thread(target=generate_image, args=(building_description, client, session['user_id'], db, image_queue))
-        thread.start()
-
-        # Render the index page
-        return render_template("index.html")
-
-# Route to check if the image is ready
 @app.route("/check_image")
 def check_image():
     if not image_queue.empty():
-        session['image_path'] = image_queue.get() 
-        print(session['image_path'])
-        response = make_response("", 302)
-        response.headers['X-Redirect'] = '/building'
-        return response
+        image_url = image_queue.get()
+        if image_url is None:
+            print("No image URL available")
+            return jsonify({'status': 'no image'}), 204
+        else:
+            print("Image URL: ", image_url)
+            return jsonify({'status': 'image ready', 'image_url': image_url}), 302
     else:
-        return "", 204
-
-# Route to display loading page, in which ajax with check_image() will check if the image is ready every 2 seconds.
-@app.route("/loading")
-def loading():
-    return render_template("loading.html")
-
-
-# Route to display the building page
-@app.route("/building", methods=["GET", "POST"])
-def building():
-
-    # If the user is not logged in, redirect them to the login page
-    if session.get("user_id") is None:
-        return redirect("/login")
-    # Button to take quiz
-    if "takeQuiz" in request.form:
-        return redirect("/")
-    # Button to logout
-    elif "logout" in request.form:
-        session.clear()
-        return redirect("/login")
-    image_path = session.get('image_path')
-    print(image_path)
-    return render_template("building.html", image_path=image_path), 200
-   
+        return jsonify({'status': 'no image'}), 204
+    
 
 # Route to logout   
 @app.route("/logout", methods=["POST"])

@@ -5,21 +5,25 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container mt-5 text-center">
-        <div class="buttons">
-            <form action="/logout" method="post" style="text-align: right;" id="logout-form">
-                <button type="submit" class="btn btn-outline-success" name="logout" id="logout">Logout</button>
-            </form>
-        </div>
-        <h1 class="mb-4">Building Visualizer</h1>
-        <p><h5>Welcome to our Building Visualizer! This form is designed to help you render an image of a building based on your preferences. Whether you're a real estate developer looking to visualize your next project or simply curious about the possibilities, we're here to assist you.</h5></p>
-        <p><h5>By answering the following questions, we'll gather information about your building's type, style, location, and more. Once completed, we'll use artificial intelligence to create a custom image that reflects your vision.</h5></p>
-        <form method="post" action="/">
-            <div class="mb-3 form-question" >
-                <label for="buildingType" class="form-label">Type</label>
+<div class="header">
+    <div id="text-header">
+        <h2 class="darker"><b>BLUEPRINT AI</b></h2>
+        <h5 class="lighter"><i>VISUALIZE YOUR FUTURE REAL ESTATE PROJECT IN 5 MINUTES</i></h5>
+    </div>
+    <form action="/logout" method="post" id="logout-form">
+        <button type="submit" class="btn btn-dark" name="logout-btn" id="logout-btn">Logout</button>
+    </form>
+</div>
+<div class="container">
+    <div class="right-side">
+        <form method="post" action="/" id="main-form">
+            <div class="form-question" >
                 <div>
-                    <select class="form-select form-select-lg custom-select" id="buildingType" name="buildingType">
-                        <option disabled selected value="">Choose Building Type</option>
+                    <label><h5>Building Type: </h5></label>
+                </div>
+                <div>
+                    <select class="form-select custom-select common-select" id="buildingType" name="buildingType">
+                        <option disabled selected value="">Building Type</option>
                         <option>Residential Apartments</option>
                         <option>Commercial Office Space</option>
                         <option>Mixed-Use</option>
@@ -28,47 +32,84 @@
                     </select>
                 </div>
             </div>
-            <div class="mb-3 form-question" >
-                <label for="heightStories" class="form-label">Number of Stories</label>
+            <div class="form-question" >
                 <div>
-                    <select class="form-select form-select-lg custom-select" id="heightStories" name="heightStories">
-                        <option disabled selected value="">Select Number of Stories</option>
+                    <label><h5>Number of Stories: </h5></label>
+                </div>
+                <div>
+                    <select class="form-select custom-select common-select" id="heightStories" name="heightStories">
+                        <option disabled selected value="">Number of Stories</option>
                         {% for i in range(3, 101) %}
                             <option>{{ i }}</option>
                         {% endfor %}
                     </select>
                 </div>
             </div>
-            <div class="mb-3 form-question">
-                <label for="colorFinishes" class="form-label">Color Scheme and Finishes</label>
+            <div class="form-question">
                 <div>
-                    <select class="form-select form-select-lg custom-select" id="colorFinishes" name="colorFinishes">
-                        <option disabled selected value="">Choose Color Scheme</option>
-                        <option>Contemporary Neutral (Whites, Grays)</option>
-                        <option>Natural Earth Tones</option>
-                        <option>Bold Hues</option>
-                        <option>High-End Dark Tones</option>
+                    <label><h5>Color Finishes: </h5></label>
+                </div>
+                <div>
+                    <select class="form-select custom-select common-select" id="colorFinishes" name="colorFinishes">
+                        <option disabled selected value="">Color</option>
+                        <option>Whites and Grays</option>
+                        <option>Beiges, Browns, and Earthy Tones</option>
+                        <option>Bright and Bold Colors</option>
+                        <option>Deep Blacks and Dark Grays</option>
+                        <option>Soft Blues and Sandy Tones</option>
+                        <option>Metallic Silvers, Grays, and Bronzes</option>
+                        <option>Creams, Tans, and Warm Grays</option>
+                        <option>Pale Pinks, Lavenders, and Light Blues</option>
+                        <option>Terracotta, Olive Greens, and Mediterranean Blues</option>
+                        <option>Shades of Green from Sage to Dark Forest</option>
+                        <option>Burnt Sienna, Brick Reds, and Earth Browns</option>
+                        <option>Shades of a Single Color for a Monochrome Effect</option>
+                        <option>Bright Yellows, Turquoises, and Coral Pinks</option>
+                        <option>Deep Maroons, Navy Blues, and Rich Greens</option>
+                        <option>Oranges, Purples, and Pinks Inspired by Sunsets</option>
+                        <option>Icy Blues and Cool Grays</option>
+                        <option>Charcoal, Slate, and Dark Matte Finishes</option>
+                        <option>Gold, Copper, and Bronze Tones</option>
                     </select>
                 </div>
             </div>
-            <div class="mb-3 form-question">
-                <label for="primaryMaterials" class="form-label">Primary Materials</label>
+            <div class="form-question">
                 <div>
-                    <select class="form-select form-select-lg custom-select" id="primaryMaterials" name="primaryMaterials">
-                        <option disabled selected value="">Select Primary Material</option>
+                    <label><h5>Primary Material: </h5></label>
+                </div>
+                <div>
+                    <select class="form-select custom-select common-select" id="primaryMaterials" name="primaryMaterials">
+                        <option disabled selected value="">Primary Material</option>
                         <option>Concrete Precast</option>
                         <option>Stone Cladding</option>
                         <option>Brick</option>
                         <option>Steel</option>
                         <option>Wood</option>
+                        <option>Glass Facade</option>
+                        <option>Aluminum Composite Panels</option>
+                        <option>Terracotta Tiles</option>
+                        <option>Fiber Cement Siding</option>
+                        <option>Stucco</option>
+                        <option>Natural Stone Veneer</option>
+                        <option>Corten Steel (Weathering Steel)</option>
+                        <option>Perforated Metal Panels</option>
+                        <option>Etched Concrete</option>
+                        <option>Decorative Bricks</option>
+                        <option>Wooden Shingles</option>
+                        <option>Polished Granite</option>
+                        <option>Textured Limestone</option>
+                        <option>Reflective Glass</option>
+                        <option>Solar Panels</option>
                     </select>
                 </div>
             </div>
-            <div class="mb-3 form-question">
-                <label for="locationContext" class="form-label">Location Context</label>
+            <div class="form-question">
                 <div>
-                    <select class="form-select form-select-lg custom-select" id="locationContext" name="locationContext">
-                        <option disabled selected value="">Choose Location Context</option>
+                    <label><h5>Location Context: </h5></label>
+                </div>
+                <div>
+                    <select class="form-select custom-select common-select" id="locationContext" name="locationContext">
+                        <option disabled selected value="">Location Context</option>
                         <option>Urban</option>
                         <option>Suburban</option>
                         <option>Rural</option>
@@ -76,11 +117,33 @@
                     </select>
                 </div>
             </div>
-            <div class="mb-3 form-question">
-                <label for="architecturalStyle" class="form-label">Architectural Style</label>
+            <div class="form-question">
                 <div>
-                    <select class="form-select form-select-lg custom-select" id="architecturalStyle" name="architecturalStyle">
-                        <option disabled selected value="">Select Architectural Style</option>
+                    <label><h5>Landscape Type: </h5></label>
+                </div>
+                <div>
+                    <select class="form-select custom-select common-select" id="landscapeType" name="landscapeType">
+                        <option disabled selected value=""><b>Landscape Type</b></option>
+                        <option>Flat Plains</option>
+                        <option>Hills</option>
+                        <option>Mountainous</option>
+                        <option>Sand Dunes</option>
+                        <option>Desert Landscape</option>
+                        <option>Tropical Setting</option>
+                        <option>Wetlands</option>
+                        <option>Rocky Cliffs</option>
+                        <option>Lakeside</option>
+                        <option>Arctic Tundra</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-question">
+                <div>
+                    <label><h5>Architectural Style: </h5></label>
+                </div>
+                <div>
+                    <select class="form-select custom-select common-select" id="architecturalStyle" name="architecturalStyle">
+                        <option disabled selected value=""><b>Architectural Style</b></option>
                         <option>Modern</option>
                         <option>Industrial</option>
                         <option>Art Deco</option>
@@ -98,101 +161,224 @@
                     </select>
                 </div>
             </div>
-            <div class="mb-3 form-question">
-                <label for="luxuryLevel" class="form-label">Quality Tier</label>
+            <div class="form-question">
                 <div>
-                    <select class="form-select form-select-lg custom-select" id="qualityTier" name="qualityTier">
-                        <option disabled selected value="">Choose Quality Tier</option>
+                    <label><h5>Quality Tier: </h5></label>
+                </div>
+                <div>
+                    <select class="form-select custom-select common-select" id="qualityTier" name="qualityTier">
+                        <option disabled selected value=""><b>Quality Tier</b></option>
                         <option>Standard</option>
                         <option>Premium</option>
                         <option>Luxury</option>
                     </select>
                 </div>
             </div>
-            <div class="mb-3 form-question">
-                <label class="form-label">Additional Elements</label>
+            <div class="form-question">
+                <div>
+                    <label class="form-label"><h5>Additional Elements: </h5></label>
+                </div>
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Pedestrian Plaza, Water Fountain, Public Art..." style="border-color: green;" id="additionalElements" name="additionalElements">
+                    <textarea rows="3" class="form-control" placeholder="Pedestrian Plaza, Water Fountain, Public Art..." id="additionalElements" name="additionalElements"></textarea>
                 </div>
             </div>
-            <div class="form-question">
-                <h4>Ready to Render?</h4>
-                <button type="submit" class="btn btn-warning" style="font-size: 20px;">Yes</button>
+            <div class="center-button">
+                <p><button type="submit" class="btn btn-lg btn-outline-dark"><b>GO FOR IT</b></button></p>
             </div>
         </form>
     </div>
-    <style>
-
-        body {
-            font-family: "Courier New", monospace;
-        }
-        .form-question {
-            margin: 75px;
-        }
-
-        .form-select {
-            border: none;
-            border-radius: 0;
-            font-size: 18px;
-            background-color: transparent;
-            color: green;
-            box-shadow: none;
-            width: 100%;
-            text-align-last: center;
-        }
-
-        @media (min-width: 992px) {
-
-            .form-select {
-                width: 50%;
-            }
-        }
-
-        .form-select:focus {
-            border: 1px solid green;
-        }
-
-        .form-label {
-            font-size: 25px;
-        }
-
-    </style>
-<script>
-    document.querySelector('form:not(#logout-form)').addEventListener('submit', function(event)
-    {
-        event.preventDefault();
-        var formData = new FormData(this);
-
-        fetch('/', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (response.status === 400) {
-                return response.json().then(data => {
-
-                    document.getElementById('errorMessage').textContent = data.message;
-                    new bootstrap.Modal(document.getElementById('errorModal')).show();
-                });
-            } else {
-                window.location.href = "/loading"; 
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-</script>
-{% endblock %} 
-
-<!--
-        <label for="timeOfDay" class="form-label">Time of Day or Lighting</label>
-    <div>
-        <select class="form-select form-select-lg custom-select" id="timeOfDay" name="timeOfDay">
-            <option disabled selected value="">Select Lighting Time</option>
-            <option>Daylight</option>
-            <option>Nighttime</option>
-            <option>Sunset</option>
-            <option>Sunrise</option>
-        </select>
+    <div class="left-side">
+        <div id="text-image">
+            <h3>Here's a bit of inspiration for you.</h3>
+        </div>
+        <div id="image-container">
+            <img id="image" src="{{ url_for('static', filename='loading.gif') }}" class="img-fluid container-img mx-auto d-block" alt="A_i_blueprints">
+        </div>
     </div>
 </div>
--->
+<style>
+
+.darker {
+    color:#3e3e3e
+}
+
+.lighter {
+    color: rgb(102, 102, 102);
+} 
+
+.header {
+    margin: 40px;
+    margin-left: 150px;
+    margin-right: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#text-header {
+    text-align: left;
+}
+
+#logout-btn {
+    margin-left: auto;
+}
+
+.container {
+    display: flex;
+    margin: 20px auto;
+    margin-bottom: 50px;
+    align-items: flex-end;
+    padding: 0;
+}
+
+.left-side {
+    margin-top: 10px;
+    width: 60%;
+    padding-left: 10px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-side {
+    margin-top: 10px;
+    width: 40%;
+    padding-right: 10px;
+    text-align: left;
+    display: flex;
+    flex-direction: column; 
+}
+
+#text-image {
+    margin: 20px;
+}
+
+#image {
+    border-radius: 15px;
+}
+
+.form-question {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.common-select {
+    font-size: 18px;
+    color: #3e3e3e;
+    box-shadow: none;
+    text-align-last: center;
+    width: 210px;
+    margin-bottom: 19.5px;
+}
+
+#additionalElements {
+    height: max-content;
+    border: 1px solid #3e3e3e;
+    margin-bottom: 10px;
+    width: 210px;
+}
+
+.center-button {
+    margin-top: 25px;
+    text-align: right;
+}
+
+@keyframes fadeInOut {
+    0% {opacity: 0;}
+    20% {opacity: 1;}
+    80% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+#image {
+    animation-name: fadeInOut;
+    animation-iteration-count: infinite;
+    animation-duration: 3.6s;
+}
+
+</style>
+<script>
+const images = [
+    "{{ url_for('static', filename='loading1.png') }}",
+    "{{ url_for('static', filename='loading2.png') }}",
+    "{{ url_for('static', filename='loading3.png') }}",
+    "{{ url_for('static', filename='loading4.png') }}",
+    "{{ url_for('static', filename='loading5.png') }}",
+    "{{ url_for('static', filename='loading6.png') }}",
+    "{{ url_for('static', filename='loading7.png') }}",
+    "{{ url_for('static', filename='loading8.png') }}",
+    "{{ url_for('static', filename='loading9.png') }}",
+    "{{ url_for('static', filename='loading10.png') }}",
+    "{{ url_for('static', filename='loading11.png') }}",
+    "{{ url_for('static', filename='loading12.png') }}",
+    "{{ url_for('static', filename='loading13.png') }}",
+    "{{ url_for('static', filename='loading14.png') }}",
+    "{{ url_for('static', filename='loading15.png') }}",
+    "{{ url_for('static', filename='loading16.png') }}",
+    "{{ url_for('static', filename='loading17.png') }}",
+    "{{ url_for('static', filename='loading18.png') }}",
+];
+const imageContainer = document.getElementById('image-container');
+const displayedImg = document.getElementById('image');
+let currentIndex = 0;
+
+function clearIntervals() {
+    clearInterval(rotateImagesInterval);
+    clearInterval(checkImageInterval);
+}
+
+function rotateImages() {
+    displayedImg.src = images[currentIndex];
+    displayedImg.style.animation = 'none'; // reset animation
+    setTimeout(function() {
+        displayedImg.style.animation = '';
+    }, 10); // trigger reflow to restart animation
+    currentIndex = (currentIndex + 1) % images.length;
+}
+
+function checkImage() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/check_image', true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 302) {
+            clearIntervals();
+            var response = JSON.parse(xhr.responseText);
+            var image_url = response.image_url;
+            console.log(image_url);
+            var image = document.getElementById('image');
+            image.style.animationName = 'none';
+            image.src = image_url;
+            document.querySelector('#text-image h3').innerHTML = "Here's your A.I Blueprint!";
+        }
+    }
+    xhr.send();
+}
+
+function startIntervals() {
+    rotateImagesInterval = setInterval(rotateImages, 3600);
+    checkImageInterval = setInterval(checkImage, 1700);
+}
+
+startIntervals();
+
+document.getElementById('main-form').addEventListener('submit', function(event) {
+    console.log('Form submitted');
+    console.log('Form submitted');
+    event.preventDefault();
+    var formData = new FormData(this);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/submit_form', true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText);
+            document.querySelector('#text-image h3').innerHTML = response.new_text;
+            clearIntervals();
+            startIntervals();
+            image.style.animationName = 'fadeInOut';
+        }
+    }
+    xhr.send(formData);
+});
+</script>
+{% endblock %} 
